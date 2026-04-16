@@ -17,7 +17,7 @@ async function loadReports() {
 
   try {
     // Fetch all potholes from our API
-    const response = await fetch('http://localhost:5000/api/potholes');
+    const response = await fetch('https://pothole-backend-9j2l.onrender.com/api/potholes');
     const result = await response.json();
 
     // Save to global variable
@@ -156,7 +156,7 @@ async function updateStatus(id) {
 
   try {
     // Send PATCH request to backend
-    const response = await fetch(`http://localhost:5000/api/potholes/${id}`, {
+    const response = await fetch(`https://pothole-backend-9j2l.onrender.com/api/potholes/${id}`, {
       method: 'PATCH',
       headers: {
         // Tell server we're sending JSON
@@ -198,7 +198,7 @@ async function deleteReport(id) {
 
   try {
     // Send DELETE request to backend
-    const response = await fetch(`http://localhost:5000/api/potholes/${id}`, {
+    const response = await fetch(`https://pothole-backend-9j2l.onrender.com/api/potholes/${id}`, {
       method: 'DELETE'
     });
 

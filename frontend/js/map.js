@@ -68,7 +68,7 @@ async function loadPotholes() {
 
   try {
     // Fetch all potholes from our backend API
-    const response = await fetch('http://localhost:5000/api/potholes');
+    const response = await fetch('https://pothole-backend-9j2l.onrender.com/api/potholes');
     const result = await response.json();
 
     // Hide loading message

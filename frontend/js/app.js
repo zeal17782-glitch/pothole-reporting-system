@@ -164,7 +164,7 @@ document.getElementById('potholeForm').addEventListener('submit', async function
   try {
     // Send data to our backend server
     // We'll build this backend in Step 5
-    const response = await fetch('http://localhost:5000/api/potholes', {
+    const response = await fetch('https://pothole-backend-9j2l.onrender.com/api/potholes', {
       method: 'POST',
       body: formData
       // Note: Don't set Content-Type header — browser sets it automatically for FormData

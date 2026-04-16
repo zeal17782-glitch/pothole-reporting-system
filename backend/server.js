@@ -2,19 +2,16 @@
 // SERVER.JS — The main backend file
 // This starts your server and connects everything
 // =============================================
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const path = require('path');
 
-// 'require' is how we import libraries in Node.js
-// Think of it like importing ingredients before cooking
-
-const express = require('express');      // Creates our server
-const mongoose = require('mongoose');    // Connects to MongoDB
-const cors = require('cors');            // Allows frontend to talk to backend
-const dotenv = require('dotenv');        // Reads our .env secret file
-const path = require('path');            // Helps with file paths (built into Node)
-
-// Load secret keys from .env file
-// Must be called before using any process.env variables
-dotenv.config();
+// Only load .env file in development (not on Render)
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config();
+}
 
 // Create the Express app
 // Think of 'app' as your server object

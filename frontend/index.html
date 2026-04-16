@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- This tells the browser what kind of document this is -->
+  <meta charset="UTF-8" />
+
+  <!-- This makes the page look good on mobile phones -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- This is the title shown on the browser tab -->
+  <title>Pothole Reporter</title>
+
+  <!-- This links our CSS file so the page looks nice -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Leaflet CSS — for the mini map on this page -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+</head>
+
+<body>
+
+  <!-- HEADER — top bar of the page -->
+  <header>
+    <div class="header-content">
+      <h1>🚧 Pothole Reporter</h1>
+      <p>Help fix your city — report a pothole in seconds</p>
+      <!-- Navigation links to other pages -->
+      <nav>
+        <a href="index.html">Report</a>
+        <a href="map.html">View Map</a>
+        <a href="admin.html">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT — the report form -->
+  <main>
+    <div class="form-container">
+      <h2>📍 Report a Pothole</h2>
+
+      <!-- This is the form users fill out -->
+      <!-- We use id="potholeForm" to reference it in JavaScript -->
+      <form id="potholeForm">
+
+        <!-- FIELD 1: Description -->
+        <div class="form-group">
+          <label for="description">📝 Description</label>
+          <textarea
+            id="description"
+            placeholder="Describe the pothole (e.g. Large pothole near bus stop, very dangerous)"
+            rows="3"
+            required
+          ></textarea>
+        </div>
+
+        <!-- FIELD 2: Location (auto-filled by GPS) -->
+        <div class="form-group">
+          <label>📍 Location (Auto-Detected)</label>
+
+          <!-- These two fields get filled automatically by JavaScript -->
+          <div class="location-row">
+            <input
+              type="text"
+              id="latitude"
+              placeholder="Latitude"
+              readonly
+            />
+            <input
+              type="text"
+              id="longitude"
+              placeholder="Longitude"
+              readonly
+            />
+          </div>
+
+          <!-- Button to trigger GPS -->
+          <button type="button" id="getLocationBtn" class="btn-secondary">
+            📡 Get My Location
+          </button>
+
+          <!-- Status message shown while getting location -->
+          <p id="locationStatus" class="status-msg"></p>
+        </div>
+
+        <!-- FIELD 3: Mini map preview -->
+        <div class="form-group">
+          <!-- This div becomes an interactive map -->
+          <!-- It's hidden until location is captured -->
+          <div id="locationMap" style="display:none;"></div>
+        </div>
+
+        <!-- FIELD 4: Photo upload -->
+        <div class="form-group">
+          <label for="photo">📸 Upload Photo</label>
+          <input
+            type="file"
+            id="photo"
+            accept="image/*"
+            required
+          />
+          <!-- Preview box — shows the photo before submitting -->
+          <div id="imagePreview" class="image-preview" style="display:none;">
+            <img id="previewImg" src="" alt="Preview" />
+          </div>
+        </div>
+
+        <!-- SUBMIT BUTTON -->
+        <button type="submit" id="submitBtn" class="btn-primary">
+          🚀 Submit Report
+        </button>
+
+        <!-- Shows success or error message after submit -->
+        <div id="submitMessage" class="submit-message"></div>
+
+      </form>
+    </div>
+  </main>
+
+  <!-- Leaflet JavaScript — must come before our own JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Our own JavaScript file -->
+  <script src="js/app.js"></script>
+
+</body>
+</html>

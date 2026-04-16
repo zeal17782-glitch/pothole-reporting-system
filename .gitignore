@@ -1,0 +1,9 @@
+# Don't upload node_modules (too large, can be reinstalled)
+node_modules/
+
+# Don't upload secret keys!
+.env
+
+# Don't upload system files
+.DS_Store
+Thumbs.db

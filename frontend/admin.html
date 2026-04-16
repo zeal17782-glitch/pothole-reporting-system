@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard</title>
+
+  <!-- Our CSS -->
+  <link rel="stylesheet" href="css/style.css"/>
+
+  <!-- Extra styles just for admin page -->
+  <style>
+
+    /* ── STATS CARDS ROW ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      border-top: 4px solid #e74c3c;
+    }
+
+    .stat-card.orange { border-top-color: #f39c12; }
+    .stat-card.green  { border-top-color: #27ae60; }
+    .stat-card.blue   { border-top-color: #3498db; }
+
+    .stat-card .number {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #2c3e50;
+      line-height: 1;
+    }
+
+    .stat-card .label {
+      font-size: 0.85rem;
+      color: #888;
+      margin-top: 5px;
+    }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-bar select,
+    .filter-bar input {
+      padding: 10px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      background: white;
+    }
+
+    .filter-bar select:focus,
+    .filter-bar input:focus {
+      outline: none;
+      border-color: #e74c3c;
+    }
+
+    /* ── REPORTS GRID ── */
+    .reports-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    /* ── REPORT CARD ── */
+    .report-card {
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .report-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    }
+
+    /* Photo at top of card */
+    .report-card .card-image {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Card body */
+    .card-body {
+      padding: 16px;
+    }
+
+    .card-body h3 {
+      font-size: 1rem;
+      color: #2c3e50;
+      margin-bottom: 8px;
+    }
+
+    .card-meta {
+      font-size: 0.82rem;
+      color: #888;
+      margin-bottom: 4px;
+    }
+
+    /* ── STATUS BADGE ── */
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin: 8px 0;
+    }
+
+    .badge-pending     { background: #fde8e8; color: #e74c3c; }
+    .badge-in-progress { background: #fef3e2; color: #f39c12; }
+    .badge-fixed       { background: #e8f8f0; color: #27ae60; }
+
+    /* ── CARD ACTIONS ── */
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Status dropdown inside card */
+    .status-select {
+      flex: 1;
+      padding: 8px 10px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      background: white;
+    }
+
+    .status-select:focus {
+      outline: none;
+      border-color: #3498db;
+    }
+
+    /* Update button */
+    .btn-update {
+      padding: 8px 14px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .btn-update:hover { background: #2980b9; }
+
+    /* Delete button */
+    .btn-delete {
+      padding: 8px 14px;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .btn-delete:hover { background: #c0392b; }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #aaa;
+      grid-column: 1/-1;
+    }
+
+    .empty-state p {
+      font-size: 1.1rem;
+      margin-top: 10px;
+    }
+
+    /* ── LOADING STATE ── */
+    .loading-state {
+      text-align: center;
+      padding: 60px;
+      grid-column: 1/-1;
+      font-size: 1.1rem;
+      color: #888;
+    }
+
+    /* ── TOAST NOTIFICATION ── */
+    /* Small popup that appears when status is updated */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #2c3e50;
+      color: white;
+      padding: 14px 22px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      z-index: 9999;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── ADMIN MAIN CONTENT ── */
+    .admin-container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .admin-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .admin-header-row h2 {
+      font-size: 1.5rem;
+      color: #2c3e50;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-content">
+      <h1>⚙️ Admin Dashboard</h1>
+      <p>Manage all pothole reports</p>
+      <nav>
+        <a href="index.html">Report</a>
+        <a href="map.html">View Map</a>
+        <a href="admin.html">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN ADMIN CONTENT -->
+  <div class="admin-container">
+
+    <!-- STATS CARDS -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="number" id="statTotal">-</div>
+        <div class="label">📍 Total Reports</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="number" id="statPending">-</div>
+        <div class="label">🔴 Pending</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="number" id="statProgress">-</div>
+        <div class="label">🟡 In Progress</div>
+      </div>
+      <div class="stat-card green">
+        <div class="number" id="statFixed">-</div>
+        <div class="label">🟢 Fixed</div>
+      </div>
+    </div>
+
+    <!-- HEADER ROW -->
+    <div class="admin-header-row">
+      <h2>📋 All Reports</h2>
+      <button onclick="loadReports()" class="btn-secondary">
+        🔄 Refresh
+      </button>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <select id="statusFilter" onchange="filterReports()">
+        <option value="all">All Statuses</option>
+        <option value="pending">🔴 Pending</option>
+        <option value="in-progress">🟡 In Progress</option>
+        <option value="fixed">🟢 Fixed</option>
+      </select>
+
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="🔍 Search by description..."
+        oninput="filterReports()"
+      />
+    </div>
+
+    <!-- REPORTS GRID -->
+    <!-- Cards get injected here by JavaScript -->
+    <div class="reports-grid" id="reportsGrid">
+      <div class="loading-state">🔄 Loading reports...</div>
+    </div>
+
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Our admin JavaScript -->
+  <script src="js/admin.js"></script>
+
+</body>
+</html>

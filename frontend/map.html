@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pothole Map</title>
+
+  <!-- Our CSS -->
+  <link rel="stylesheet" href="css/style.css"/>
+
+  <!-- Leaflet CSS — the map library -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+  <!-- Extra styles just for map page -->
+  <style>
+    /* Make map fill most of the screen */
+    #map {
+      height: calc(100vh - 140px);
+      width: 100%;
+      z-index: 1;
+    }
+
+    /* Stats bar above the map */
+    .map-stats {
+      background: white;
+      padding: 12px 20px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      z-index: 2;
+      position: relative;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .stat-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .dot-pending    { background: #e74c3c; }
+    .dot-progress   { background: #f39c12; }
+    .dot-fixed      { background: #27ae60; }
+
+    /* Popup inside map when you click a pin */
+    .pothole-popup {
+      max-width: 220px;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .pothole-popup img {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .pothole-popup h3 {
+      font-size: 0.95rem;
+      margin-bottom: 5px;
+      color: #2c3e50;
+    }
+
+    .pothole-popup p {
+      font-size: 0.82rem;
+      color: #666;
+      margin-bottom: 4px;
+    }
+
+    /* Status badge inside popup */
+    .popup-status {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-top: 5px;
+    }
+
+    .status-pending    { background: #fde8e8; color: #e74c3c; }
+    .status-in-progress { background: #fef3e2; color: #f39c12; }
+    .status-fixed      { background: #e8f8f0; color: #27ae60; }
+
+    /* Loading overlay */
+    .map-loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      z-index: 999;
+      text-align: center;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-content">
+      <h1>🗺️ Pothole Map</h1>
+      <p>See all reported potholes in your area</p>
+      <nav>
+        <a href="index.html">Report</a>
+        <a href="map.html">View Map</a>
+        <a href="admin.html">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- STATS BAR -->
+  <div class="map-stats">
+    <div class="stat-item">
+      📍 Total Reports:
+      <strong id="totalCount">Loading...</strong>
+    </div>
+    <div class="stat-item">
+      <span class="stat-dot dot-pending"></span>
+      Pending: <strong id="pendingCount">0</strong>
+    </div>
+    <div class="stat-item">
+      <span class="stat-dot dot-progress"></span>
+      In Progress: <strong id="progressCount">0</strong>
+    </div>
+    <div class="stat-item">
+      <span class="stat-dot dot-fixed"></span>
+      Fixed: <strong id="fixedCount">0</strong>
+    </div>
+
+    <!-- Refresh button -->
+    <button onclick="loadPotholes()" class="btn-secondary" style="margin-left:auto;">
+      🔄 Refresh Map
+    </button>
+  </div>
+
+  <!-- MAP CONTAINER -->
+  <div style="position: relative;">
+    <!-- Loading message shown while fetching data -->
+    <div class="map-loading" id="mapLoading">
+      🔄 Loading potholes...
+    </div>
+
+    <!-- The actual map renders here -->
+    <div id="map"></div>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Our map logic -->
+  <script src="js/map.js"></script>
+
+</body>
+</html>
